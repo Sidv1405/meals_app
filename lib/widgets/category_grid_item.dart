@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/models/category.dart';
+import '../models/category.dart';
 
 class CategoryGridItem extends StatelessWidget {
   const CategoryGridItem({
@@ -23,20 +23,17 @@ class CategoryGridItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              category.color.withValues(alpha: 0.55),
-              category.color.withValues(alpha: 0.9),
+              category.color.withOpacity(0.55),
+              category.color.withOpacity(0.9),
             ],
-            begin: AlignmentGeometry.topLeft,
-            end: AlignmentGeometry.bottomRight,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: Text(
-            category.title,
-            maxLines: 1,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+        child: Text(
+          category.title,
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),

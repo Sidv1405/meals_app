@@ -1,64 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/data/dummy_data.dart';
-import 'package:meals_app/models/meal/meal.dart';
-import 'package:meals_app/pages/meals_page.dart';
-import 'package:meals_app/widgets/category_grid_item.dart';
 
+import 'package:meals_app/pages/meals_page.dart';
+
+import '../data/dummy_data.dart';
 import '../models/category.dart';
+import '../models/meal/meal.dart';
+import '../widgets/category_grid_item.dart';
 
 class CategoriesPage extends StatelessWidget {
-  const CategoriesPage({super.key, required this.onToggleFavorite});
+  const CategoriesPage({
+    super.key,
+    required this.onToggleFavorite,
+    required this.availableMeals,
+  });
 
   final void Function(Meal meal) onToggleFavorite;
+  final List<Meal> availableMeals;
 
   void _selectCategory(BuildContext context, Category category) {
-    final List<Meal> meals = dummyMeals.where((meal) {
-      return meal.categories.contains(category.id);
-    }).toList();
+    final filteredMeals = availableMeals
+        .where((meal) => meal.categories.contains(category.id))
+        .toList();
 
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => MealsPage(
           title: category.title,
-          meals: meals,
+          meals: filteredMeals,
           onToggleFavorite: onToggleFavorite,
         ),
       ),
-    );
+    ); // Navigator.push(context, route)
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Categories',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+    return GridView(
+      padding: const EdgeInsets.all(24),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 3 / 2,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
       ),
-      body: Center(
-        child: GridView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
+      children: [
+        // availableCategories.map((category) => CategoryGridItem(category: category)).toList()
+        for (final category in availableCategories)
+          CategoryGridItem(
+            category: category,
+            onSelectCategory: () {
+              _selectCategory(context, category);
+            },
           ),
-          children: [
-            // for (final cat in availableCategories)
-            //   CategoryGridItem(category: cat),
-            ...availableCategories.map(
-              (cat) => CategoryGridItem(
-                category: cat,
-                onSelectCategory: () {
-                  _selectCategory(context, cat);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
