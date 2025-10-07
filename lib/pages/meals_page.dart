@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:meals_app/pages/meal_details_page.dart';
 
 import '../models/meal/meal.dart';
 import '../widgets/meal/meal_item.dart';
 
-class MealsPage extends StatelessWidget {
+class MealsPage extends ConsumerWidget {
   const MealsPage({
     super.key,
     this.title,
     required this.meals,
-    required this.onToggleFavorite,
   });
 
   final String? title;
   final List<Meal> meals;
-  final void Function(Meal meal) onToggleFavorite;
 
   void selectMeal(BuildContext context, Meal meal) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) =>
-            MealDetailsPage(meal: meal, onToggleFavorite: onToggleFavorite),
+            MealDetailsPage(meal: meal, ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     Widget content = Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
